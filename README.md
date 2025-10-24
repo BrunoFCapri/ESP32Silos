@@ -42,6 +42,9 @@ Configuración de `main.py` (MicroPython)
 - `SUPABASE_TABLE` - nombre de la tabla (por defecto `readings`).
 - `RAW_AIR` y `RAW_WATER` - calibración ADC (valores medidos en aire y en agua) para mapear 0..4095 a 0..100%.
 
+En caso de no tener Micropython en tu ESP32
+en el archivo videofashear.txt se en cuentra el link de un video en el cual te enseñan como hacerlo, luego de eso vas a tener que descargar algún editor a gusto, recomendamos Thony por su sencilles pero se puede usar desde el mismo vs code
+
 Calibración
 1. Con el sensor en aire (seco) anota el valor ADC (ej. 4095) y ponlo en `RAW_AIR`.
 2. Con el sensor en agua (totalmente húmedo) anota el valor ADC (ej. 0) y ponlo en `RAW_WATER`.
@@ -54,20 +57,7 @@ Cómo usar
 4. Si no hay `wifi.txt` con credenciales, el ESP arrancará en modo AP llamado `ESP32-CONFIG` donde podrás escribir SSID y contraseña. Tras guardar, el dispositivo se reiniciará y se conectará en modo STA.
 5. Verifica que las lecturas se envían a Supabase y/o consulta la API local `http://<IP_DEL_ESP>/data` para ver la última lectura.
 
-Página web de ejemplo
+Página web de la implementacion
 En `web/index.html` hay un ejemplo de página estática que consulta la tabla `readings` en Supabase mediante su REST API. Edita las variables `SUPABASE_URL` y `ANON_KEY` dentro de ese archivo para que apunten a tu proyecto.
 
-Seguridad
-- No publiques tu `service_role` key en páginas públicas. Para una web pública usa la `anon` key con políticas RLS que limiten lectura a las columnas necesarias.
-- Si el dispositivo usa una clave con permisos elevados, mantenla fuera del repositorio o protégela (por ejemplo, cargándola en tiempo de despliegue o usando variables de entorno en un servicio intermedio).
 
-Archivos añadidos
-- `web/index.html`: página de ejemplo que muestra últimas lecturas.
-
-Próximos pasos sugeridos
-- Añadir un `.gitignore` para excluir artefactos locales y binarios de MicroPython.
-- Implementar reintentos y almacenamiento local de lecturas fallidas en `main.py`.
-- Añadir tests automáticos o scripts de despliegue para una integración más fluida.
-
-Contacto
-Si quieres que adapte la documentación o genere un README en inglés, o que publique la web en GitHub Pages, dime y lo hago.
