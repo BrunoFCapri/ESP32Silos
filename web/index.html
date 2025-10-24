@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ESP32Silos - Lecturas</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 800px; margin: 24px auto; padding: 8px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 8px; border: 1px solid #ddd; text-align: left; }
+    header { display:flex; justify-content:space-between; align-items:center; }
+    button { padding:8px 12px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>ESP32Silos — Últimas lecturas</h1>
+    <div>
+      <button id="refresh">Actualizar</button>
+    </div>
+  </header>
+
+  <p id="status">Estado: esperando...</p>
+
+  <table>
+    <thead><tr><th>Fecha</th><th>Humedad (%)</th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+
+  <script>
+    // EDITA estos valores para apuntar a tu proyecto Supabase
+    const SUPABASE_URL = 'https://xxxx.supabase.co'; // sin slash final
+    const ANON_KEY = 'YOUR_ANON_KEY_HERE';
+    const TABLE = 'readings';
+
+    const statusEl = document.getElementById('status');
+    const rowsEl = document.getElementById('rows');
+    async function fetchReadings(){
+      statusEl.textContent = 'Estado: consultando Supabase...';
+      try{
+        const url = `${SUPABASE_URL}/rest/v1/${TABLE}?select=moisture,inserted_at&order=inserted_at.desc&limit=20`;
+        const res = await fetch(url, { headers: { 'apikey': ANON_KEY, 'Accept': 'application/json' } });
+        if(!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        rowsEl.innerHTML = '';
+        if(!data || data.length === 0){
+          rowsEl.innerHTML = '<tr><td colspan="2">No hay lecturas</td></tr>';
+        } else {
+          data.forEach(r => {
+            const d = new Date(r.inserted_at);
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${d.toLocaleString()}</td><td>${r.moisture}</td>`;
+            rowsEl.appendChild(tr);
+          });
+        }
+        statusEl.textContent = `Estado: ${data.length} lecturas cargadas`;
+      } catch(e){
+        statusEl.textContent = 'Error: ' + e.message;
+        rowsEl.innerHTML = '<tr><td colspan="2">Error al obtener lecturas</td></tr>';
+      }
+    }
+
+    document.getElementById('refresh').addEventListener('click', fetchReadings);
+    // cargar al abrir
+    fetchReadings();
+  </script>
+</body>
+</html>
