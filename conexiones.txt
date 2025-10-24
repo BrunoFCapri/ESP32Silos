@@ -1,0 +1,4 @@
+VCC del módulo -> ESP32 3.3V
+GND del módulo -> ESP32 GND
+AO (Analog Out) -> ESP32 GPIO34 (u otro pin ADC1: 32, 33, 34, 35, 36, 39)
+
