@@ -15,7 +15,11 @@ READING_FREQUENCY_MS = 5 * 1000  # 5 segundos
 WIFI_FILE = "wifi.txt"
 
 # Supabase (importado desde secrets.py)
+# Supabase (rellena con tus valores)
+SUPABASE_URL = "xxxx"  # sin slash final
+SUPABASE_KEY = "xxx"
 SUPABASE_INSERT_URL = SUPABASE_URL + "/rest/v1/" + SUPABASE_TABLE
+
 
 # Calibración del sensor de humedad (ADC 0..4095)
 RAW_AIR = 4095   # valor medido en aire/seco
